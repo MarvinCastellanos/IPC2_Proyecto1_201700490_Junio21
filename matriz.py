@@ -9,6 +9,9 @@ class matrizD:
     
     def generaGraphviz():
         print('grafica Graphviz')
+
+    def generaXML():
+        print('xml')
     
     def agregaNodo(self,nodo, x, y):
         auxX=self.headX
@@ -62,3 +65,17 @@ class matrizD:
                 break
 
      #Recorre nodos de fila
+        while(True):
+            if (auxX.getX()<x):
+                if (auxY.getSiguiente()==None):
+                    auxY.setSiguiente(nodo)
+                    nodo.setAnterior(auxX)
+                    break
+                elif (auxY.getSiguiente().getX()<x):
+                    auxY=auxY.getSiguiente()
+                else:
+                    nodo.setSiguinte(auxY.getSiguiente())
+                    nodo.setAnterior(auxY)
+                    auxY.getSiguiente().setAnterior(nodo)
+                    auxY.setSiguiente(nodo)
+                    break
