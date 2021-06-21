@@ -4,6 +4,7 @@ class NodoCabeceraY:
         self.abajo=None
         self.siguiente=None
         self.y=y
+        self.x=0
 
     def setArriba(self,nodoC):
         self.arriba=nodoC
@@ -25,3 +26,6 @@ class NodoCabeceraY:
     
     def getY(self):
         return self.y
+    
+    def getX(self):
+        return self.x
