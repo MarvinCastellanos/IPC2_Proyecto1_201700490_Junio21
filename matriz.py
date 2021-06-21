@@ -1,28 +1,95 @@
 from nodo import punto
-from nodoY import NodoCabeceraY
-from nodoX import NodoCabeceraX
+from graphviz import Digraph
 
 class matrizD:
     def __init__(self):
-        self.headX=NodoCabeceraX(1)
-        self.headY=NodoCabeceraY(1)
+        self.head=punto(0,0,'blanco','0,0')
+
     
-    def generaGraphviz():
-        print('grafica Graphviz')
+    def generaGraphviz(self):
+        aux1=self.head
+        aux2=self.head
+        dot=Digraph(comment='Tablero')
+        dot.attr(style='filled')
+        dot.node(str(aux1.getX())+','+str(aux1.getY()),'Head')
+        while(True):
+         #grafica nodos hacia arriba
+            if(aux2.getArriba() is not None):
+                pos = str(aux2.getX())+','+str(aux2.getY())
+                posSig = str(aux2.getArriba().getX())+','+str(aux2.getArriba().getY())
+
+                dot.node(posSig,str(aux2.getArriba().getValor()),fillcolor=aux2.getArriba().getColor())
+                dot.edge(pos,posSig)
+                #dot.edge(posSig,pos)
+         #grafica nodos hacia abajo
+            if(aux2.getAbajo() is not None):
+                dot.node(str(aux2.getAbajo().getX())+','+str(aux2.getAbajo().getY()),str(aux2.getAbajo().getValor()))
+                pos = str(aux2.getX())+','+str(aux2.getY())
+                posSig = str(aux2.getAbajo().getX())+','+str(aux2.getAbajo().getY())
+                dot.edge(pos,posSig)
+                #dot.edge(posSig,pos)
+         #grafica nodos hacia anterior
+            if (aux2.getAnterior() is not None):
+                pos = str(aux2.getX())+','+str(aux2.getY())
+                posSig = str(aux2.getAnterior().getX())+','+str(aux2.getAnterior().getY())
+
+                dot.node(posSig,str(aux2.getAnterior().getValor()))
+                
+                #dot.edge(pos,posSig)
+                #dot.edge(posSig,pos)
+         #grafica nodos hacia siguiente
+            if(aux2.getSiguiente() is not None):
+                pos = str(aux2.getX())+','+str(aux2.getY())
+                posSig = str(aux2.getSiguiente().getX())+','+str(aux2.getSiguiente().getY())
+                dot.node(posSig,str(aux2.getSiguiente().getValor()))
+                
+                dot.edge(pos,posSig)
+                aux2=aux2.getSiguiente()
+                continue
+            else:
+                if(aux1.getAbajo() is not None):
+                    with dot.subgraph() as s:
+                        aux2=aux1
+                        s.attr(rank='same')
+                        while(True):
+                            if(aux2.getSiguiente() is not None):
+                                s.node(str(aux2.getX())+','+str(aux2.getY()))
+                                aux2=aux2.getSiguiente()
+                            else:
+                                s.node(str(aux2.getX())+','+str(aux2.getY()))
+                                break
+                    aux1=aux1.getAbajo()
+                    aux2=aux1
+                    continue
+                else:
+                    with dot.subgraph() as s:
+                        aux2=aux1
+                        s.attr(rank='same')
+                        while(True):
+                            if(aux2.getSiguiente() is not None):
+                                s.node(str(aux2.getX())+','+str(aux2.getY()))
+                                aux2=aux2.getSiguiente()
+                            else:
+                                s.node(str(aux2.getX())+','+str(aux2.getY()))
+                                break
+                    break
+            
+            
+        dot.render('Matriz', view=True)
 
     def generaXML():
         print('xml')
     
     def agregaNodo(self,nodo, x, y):
-        auxX=self.headX
-        auxY=self.headY
+        auxX=self.head
+        auxY=self.head
      
      #Recorre y crea cabeceras X
-        contadorX=1
+        contadorX=0
         while(True):
             if (auxX.getX()<x):
                 if (auxX.getSiguiente()==None):
-                    nuevo=NodoCabeceraX(contadorX+1)
+                    nuevo=punto(contadorX+1,0,'white',contadorX+1)
                     auxX.setSiguiente(nuevo)
                     nuevo.setAnterior(auxX)
                     contadorX+=1
@@ -54,11 +121,11 @@ class matrizD:
                 auxX=nodo
 
      #Recorre cabeceras Y
-        contadorY=1
+        contadorY=0
         while(True):
             if (auxY.getY()<y):
                 if (auxY.getAbajo()==None):
-                    nuevo=NodoCabeceraY(contadorY+1)
+                    nuevo=punto(0,contadorY+1,'white',contadorY+1)
                     auxY.setAbajo(nuevo)
                     nuevo.setArriba(auxY)
                     contadorY+=1

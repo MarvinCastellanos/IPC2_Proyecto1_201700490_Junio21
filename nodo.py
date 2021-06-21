@@ -41,3 +41,6 @@ class punto:
     
     def getY(self):
         return self.y
+
+    def getValor(self):
+        return self.valor
